@@ -37,24 +37,16 @@ document.addEventListener('keyup', (event) => {
     }
 });
 
-function startGame(difficulty) {
-    difficultyMultiplier = difficulty;
-    menu.style.display = 'none';
-    canvas.style.display = 'block';
-    restartDiv.style.display = 'block';
+
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
     resetGame();
     gameLoop();
 }
 
-function resetGame() {
-    score1 = 0;
-    score2 = 0;
-    paddle1Y = canvas.height / 2 - paddleHeight / 2;
-    paddle2Y = canvas.height / 2 - paddleHeight / 2;
-    ballX = canvas.width / 2;
-    ballY = canvas.height / 2;
-    gameOverScreen.style.display = 'none';
-    canvas.style.display = 'block';
+
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
     gameLoop();
 }
 
@@ -95,12 +87,31 @@ function checkGameOver() {
     }
 }
 
-function endGame() {
-    canvas.style.display = 'none';
-    gameOverScreen.style.display = 'block';
+
+    canvas.removeEventListener('touchstart', handleTouchStart);
+    canvas.removeEventListener('touchmove', handleTouchMove);
 }
 
-function gameLoop() {
+
+
+// Obsługa dotyku
+let touchStartY = 0;
+function handleTouchStart(event) {
+    touchStartY = event.touches[0].clientY;
+}
+
+function handleTouchMove(event) {
+    event.preventDefault();
+    const touchY = event.touches[0].clientY;
+    const deltaY = touchY - touchStartY;
+    touchStartY = touchY;
+    paddle1Y += deltaY;
+    if (paddle1Y < 0) {
+        paddle1Y = 0;
+    } else if (paddle1Y + paddleHeight > canvas.height) {
+        paddle1Y = canvas.height - paddleHeight;
+    }
+}
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     paddle1Y += paddleSpeed * paddle1Direction;
