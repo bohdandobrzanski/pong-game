@@ -1,3 +1,4 @@
+// Plik: pong.js
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const menu = document.getElementById('menu');
@@ -41,11 +42,11 @@ function startGame(difficulty) {
     menu.style.display = 'none';
     canvas.style.display = 'block';
     restartDiv.style.display = 'block';
-    
-    // Dodanie obsługi dotyku
+
+    // Dodaj słuchaczy dotyku
     canvas.addEventListener('touchstart', handleTouchStart);
     canvas.addEventListener('touchmove', handleTouchMove);
-    
+
     resetGame();
     gameLoop();
 }
@@ -59,21 +60,17 @@ function resetGame() {
     ballY = canvas.height / 2;
     gameOverScreen.style.display = 'none';
     canvas.style.display = 'block';
+
+    // Dodaj słuchaczy dotyku
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
+
     gameLoop();
 }
 
 function restartGame() {
     resetGame();
     gameLoop();
-}
-
-function endGame() {
-    canvas.style.display = 'none';
-    gameOverScreen.style.display = 'block';
-    
-    // Usunięcie obsługi dotyku
-    canvas.removeEventListener('touchstart', handleTouchStart);
-    canvas.removeEventListener('touchmove', handleTouchMove);
 }
 
 function drawRect(x, y, width, height, color) {
@@ -108,23 +105,13 @@ function checkGameOver() {
     }
 }
 
-// Obsługa dotyku
-let touchStartY = 0;
-function handleTouchStart(event) {
-    touchStartY = event.touches[0].clientY;
-}
+function endGame() {
+    canvas.style.display = 'none';
+    gameOverScreen.style.display = 'block';
 
-function handleTouchMove(event) {
-    event.preventDefault();
-    const touchY = event.touches[0].clientY;
-    const deltaY = touchY - touchStartY;
-    touchStartY = touchY;
-    paddle1Y += deltaY;
-    if (paddle1Y < 0) {
-        paddle1Y = 0;
-    } else if (paddle1Y + paddleHeight > canvas.height) {
-        paddle1Y = canvas.height - paddleHeight;
-    }
+    // Usuń słuchaczy dotyku
+    canvas.removeEventListener('touchstart', handleTouchStart);
+    canvas.removeEventListener('touchmove', handleTouchMove);
 }
 
 function gameLoop() {
@@ -195,4 +182,23 @@ function resetBall() {
     ballY = canvas.height / 2;
     ballSpeedX = -ballSpeedX;
     ballSpeedY = 2 * (Math.random() < 0.5 ? 1 : -1);
+}
+
+// Obsługa dotyku
+let touchStartY = 0;
+function handleTouchStart(event) {
+    touchStartY = event.touches[0].clientY;
+}
+
+function handleTouchMove(event) {
+    event.preventDefault();
+    const touchY = event.touches[0].clientY;
+    const deltaY = touchY - touchStartY;
+    touchStartY = touchY;
+    paddle1Y += deltaY;
+    if (paddle1Y < 0) {
+        paddle1Y = 0;
+    } else if (paddle1Y + paddleHeight > canvas.height) {
+        paddle1Y = canvas.height - paddleHeight;
+    }
 }
