@@ -1,4 +1,3 @@
-<!-- Plik: pong.js -->
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const menu = document.getElementById('menu');
@@ -37,22 +36,44 @@ document.addEventListener('keyup', (event) => {
     }
 });
 
-
+function startGame(difficulty) {
+    difficultyMultiplier = difficulty;
+    menu.style.display = 'none';
+    canvas.style.display = 'block';
+    restartDiv.style.display = 'block';
+    
+    // Dodanie obsługi dotyku
     canvas.addEventListener('touchstart', handleTouchStart);
     canvas.addEventListener('touchmove', handleTouchMove);
+    
     resetGame();
     gameLoop();
 }
 
-
-    canvas.addEventListener('touchstart', handleTouchStart);
-    canvas.addEventListener('touchmove', handleTouchMove);
+function resetGame() {
+    score1 = 0;
+    score2 = 0;
+    paddle1Y = canvas.height / 2 - paddleHeight / 2;
+    paddle2Y = canvas.height / 2 - paddleHeight / 2;
+    ballX = canvas.width / 2;
+    ballY = canvas.height / 2;
+    gameOverScreen.style.display = 'none';
+    canvas.style.display = 'block';
     gameLoop();
 }
 
 function restartGame() {
     resetGame();
     gameLoop();
+}
+
+function endGame() {
+    canvas.style.display = 'none';
+    gameOverScreen.style.display = 'block';
+    
+    // Usunięcie obsługi dotyku
+    canvas.removeEventListener('touchstart', handleTouchStart);
+    canvas.removeEventListener('touchmove', handleTouchMove);
 }
 
 function drawRect(x, y, width, height, color) {
@@ -87,13 +108,6 @@ function checkGameOver() {
     }
 }
 
-
-    canvas.removeEventListener('touchstart', handleTouchStart);
-    canvas.removeEventListener('touchmove', handleTouchMove);
-}
-
-
-
 // Obsługa dotyku
 let touchStartY = 0;
 function handleTouchStart(event) {
@@ -112,6 +126,8 @@ function handleTouchMove(event) {
         paddle1Y = canvas.height - paddleHeight;
     }
 }
+
+function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     paddle1Y += paddleSpeed * paddle1Direction;
